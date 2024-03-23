@@ -1,0 +1,22 @@
+.c-container>img{
+    width: 9rem;
+}
+.c-container{
+    justify-content: space-between;
+}
+
+@media (max-width:640px){
+    .c-wrapper{
+        justify-content: center;
+        align-items: center;
+        width:90%;
+        margin-left: 1.5rem;
+        
+    }
+    
+    .c-container>img{
+        width: 7rem;
+    }
+
+
+}

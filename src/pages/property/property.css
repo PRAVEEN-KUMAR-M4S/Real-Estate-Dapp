@@ -1,0 +1,17 @@
+.properties-container{
+    gap: 2rem;
+}
+.properties-container .search{
+    width: clamp(12rem,100%,28rem);
+    border-radius: 30px;
+    border: 1px solid;
+}
+
+.properties-container .search .button{
+    border-radius: 30px;
+    padding: 10px 15px;
+
+}
+.properties-container .search input{
+    width: 70%;
+}

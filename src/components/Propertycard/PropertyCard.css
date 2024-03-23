@@ -1,0 +1,45 @@
+.r-card{
+    gap: 0.6rem;
+    padding: 1rem;
+    border-radius: 10px;
+    max-width: 20rem;
+    margin: auto;
+    transition: all 300ms ease-in;
+    position: relative;
+
+   
+}
+
+.r-card>img{
+    width: 100%;
+    max-height: 12rem;
+    max-width: max-content;
+    border-radius: 10px;
+}
+.r-card>:nth-child(2){
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+.r-card>:nth-child(3){
+    font-size: 1.5rem;
+}
+.r-card>:nth-child(4){
+    width: 16rem;
+} 
+
+.r-price{
+    font-weight: 500;
+    font-size: large;
+}
+
+.r-content>:nth-child(1){
+    font-size: 1.4rem;
+    font-weight: 600;
+   
+}
+
+
+.r-card:hover{
+    scale: 1.1;
+    cursor: pointer;
+}
