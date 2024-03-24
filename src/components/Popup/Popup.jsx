@@ -3,6 +3,7 @@ import "./Popup.css"
 import { useState } from "react";
 import CreateForm from "../../pages/AddPrpty/CreateForm";
 import { useStateContext } from "../../context/index";
+import { HashLoader } from "react-spinners";
 
 const Popup = (props) => {
 
@@ -51,9 +52,9 @@ const Popup = (props) => {
           </div>
           
 <div className="flex justify-center items-center mt-[40px]">
-<button type='submit' className=' font-semibold border-none bg-[#4066ff] p-4 text-white'>Submit</button>
+<button type='submit' className=' font-semibold border-none bg-[#4066ff] p-4 text-white'>{loading? <HashLoader size={25} color='#fff'/>:"submit"}</button>
           </div>
-
+  
                 </form>
 
             </div>
