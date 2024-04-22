@@ -13,6 +13,7 @@ import Comment from '../../components/Comment/Comment';
 import Map from "../../components/Map/Map";
 import { useNavigate } from 'react-router-dom';
 import  Popup  from '../../components/Popup/Popup';
+import Popup2 from "../../components/Popup2/Popup2";
 
 const Details = () => {
   const navigate=useNavigate();
@@ -32,6 +33,8 @@ const Details = () => {
 
   const [buttonClick, setButtonClick] = useState(false);
 
+  const [updateButton, setUpdateButton] = useState(false);
+
     const [property, setProperty] = useState();
     const [parsedReviews, setParsedReviews] = useState();
     const [properties, setProperties] = useState([]);
@@ -50,12 +53,13 @@ const Details = () => {
       const dataReview=await fetProductReviewFunction(id);
       const dataProperties=await getAllPropertyData();
       setProperty(data);
+      
       setProperties(dataProperties);
       setParsedReviews(dataReview);
       setIsLoading(false);
 
     }
-    
+   
     
 
 
@@ -88,6 +92,7 @@ const Details = () => {
         ...review,productId:property?.productID
       })
       setCommentLoading(false);
+      window.location.reload();
     
     }
 
@@ -117,6 +122,7 @@ const Details = () => {
       setBuyPropertyLoading(true);
       const data= await buyPropertyFunction(buying);
       setBuyPropertyLoading(false);
+      window.location.reload();
     }
 
     //UPDATE PRICE
@@ -136,6 +142,8 @@ const Details = () => {
       window.location.reload();
     }
 
+    const link='Qmb467ZPvAqpytuqzYwF15ncs8Km5bt57cmYBp3CaaKUeP';
+
 
 
 
@@ -153,6 +161,8 @@ const Details = () => {
 //     )
 //   }
 
+
+
   const homeaddress=property?.address.split(",").slice(0)[0];
   const city=property?.address.split(",").slice(0)[1];
   const country=property?.address.split(",").slice(-1)[0];
@@ -167,7 +177,8 @@ const Details = () => {
           <AiFillHeart size={24} color='white'/>
         </div>
 
-        <img src={property?.images}/>
+        <img src={`https://brown-neighbouring-nightingale-766.mypinata.cloud/ipfs/${property?.images}`} sizes='100vw' />
+
         <div className="flexCenter property-details">
           <div className="flexColStart justify-center  left blue-glassmorphism p-6">
 
@@ -197,7 +208,7 @@ const Details = () => {
             update == "updateproperty" && address == property?.owner ? <button className='button' onClick={()=>setButtonClick(true)}>Update Property Price</button>:null
            }
             {
-            update == "updateproperty" && address == property?.owner ? <button className='button'>Update Property Status</button>:null
+            update == "updateproperty" && address == property?.owner ? <button className='button' onClick={()=>setUpdateButton(true)}>Update Property Status</button>:null
            }
 
             
@@ -226,9 +237,10 @@ const Details = () => {
         
         
          
-        <Popup trigger={buttonClick} id={id} settrigger={setButtonClick}>
-          <h1>hello</h1>
-        </Popup>
+        <Popup trigger={buttonClick} id={id} settrigger={setButtonClick}/>
+
+
+        <Popup2 trigger={updateButton} id={id} status={property?.isSelling} settrigger={setUpdateButton}/>
 
       </div>
     </div>

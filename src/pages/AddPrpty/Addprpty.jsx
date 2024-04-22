@@ -5,6 +5,7 @@ import { checkImage } from "../../../utility/utils";
 import { ethers } from "ethers";
 import { PacmanLoader } from "react-spinners";
 import CreateForm from './CreateForm';
+import axios from "axios";
 
 
 
@@ -14,6 +15,72 @@ const Addprpty = () => {
 
 
   const [loading, setLoading] = useState(false);
+  const [file, setFile] = useState(null);
+  const [displayImg,setDisplayImg] = useState(null);
+  const [fileName, setFileName] = useState("Uploade Image")
+
+
+  // const onImageChaged=(event)=>{
+  //   if(event.target.files && event.target.files[0]){
+  //     setFile(URL.createObjectURL(event.target.files[0]));
+  //   }  
+  // }
+
+  const uploadToPinata=async()=>{
+    setFileName("Image Uploading.....")
+    if(file){
+      try {
+        const formData=new FormData();
+        formData.append("file",file);
+        const response =await axios({
+          method:"post",
+          url:"https://api.pinata.cloud/pinning/pinFileToIPFS",
+          data:formData,
+          headers:{
+              pinata_api_key:"a0e61b440be70aa06542",
+              pinata_secret_api_key:"feb62f6be96468f95b21cfea7fbce976bd4e8a882faae194b10ed9b608848fe9",
+              "Content-Type":"multipart/form-data"
+          }
+
+        })
+        const imageUrl=response.data.IpfsHash;
+        setForm({...form,images:imageUrl});
+
+        alert("Successfully Image Uploaded");
+        setFileName("Uploaded...")
+   
+      } catch (error) {
+        alert("Unable to uplade to the IPFS")        
+      }
+    }
+  }
+
+  const retriveHash=(event)=>{
+
+    const data=event.target.files[0];
+    const reader=new window.FileReader();
+    reader.readAsArrayBuffer(data);
+    reader.onloadend=()=>{
+          setFile(event.target.files[0]);
+          if(event.target.files && event.target.files[0]){
+            setDisplayImg(URL.createObjectURL(event.target.files[0]))
+          }
+          event.preventDefault();
+        }
+
+
+  }
+
+
+  // const gettingData = (e)=>{
+  //   const data=e.target.files[0];
+  //   const reader=new window.FileReader();
+  //   reader.readAsArrayBuffer(data);
+  //   reader.onloadend=()=>{
+  //     setFile(e.target.files[0].name)
+  //     e.preventDefault();
+  //   }
+  // }
 
 
   const [form, setForm] = useState({
@@ -36,28 +103,55 @@ const Addprpty = () => {
   //   { value: 'Office', label: 'Office' }
   // ]
 
+const handleSubmit=async()=>{
+  setLoading(true)
+  const{
+    propertyTitle,
+    description,
+    category,
+    price,
+    images,
+    propertyAddress
+  }=form;
+
+  console.log(propertyTitle,
+    description,
+    category,
+    price,
+    images,
+    propertyAddress);
+
+    if(images||propertyTitle||price||category||description){
+      await createPropertyFunction({
+        ...form,
+        price:ethers.utils.parseUnits(form.price,18)
+      });
+      setLoading(false);
+
+    }else{
+      console.log("provide the details");
+    }
+}
 
 
+  // const handleSubmit=async(e)=>{
+  //   e.preventDefault();
 
-  const handleSubmit=async(e)=>{
-    e.preventDefault();
+  //   checkImage(form.images,async(exists)=>{
+  //     if(exists){
+  //       setLoading(true)
+       
+  //       console.log(form)
 
-    checkImage(form.images,async(exists)=>{
-      if(exists){
-        setLoading(true)
-        await createPropertyFunction({
-          ...form,
-          price:ethers.utils.parseUnits(form.price,18)
-        })
+  //       setLoading(false);
+  //       window.location.reload();
+  //     }else{
+  //       alert("Please provide a valid image")
+  //       setForm({...form, images:""});
 
-        setLoading(false)
-      }else{
-        alert("Please provide a valid image")
-        setForm({...form, images:""});
-
-      }
-    })
-  }
+  //     }
+  //   })
+  // }
   if(loading){
     return (
       <div className='wrapper flexCenter' style={{height:"60vh"}}>
@@ -109,12 +203,68 @@ const Addprpty = () => {
             inputType="text"
             value={form.propertyTitle}
             handleChange={(e)=>handleChangeForm("propertyTitle",e)}/>
-            <CreateForm labelName="Image *"
+            {/* <CreateForm labelName="Image *"
             placeholder="URL"
             inputType="url"
             value={form.images}
-            handleChange={(e)=>handleChangeForm("images",e)}/>
+            handleChange={(e)=>handleChangeForm("images",e)}/> */}
   </div>
+  <div className="relative w-64">
+  <div className="h-100 bg-gray-100 rounded-lg flex flex-col justify-between">
+    <div className="flex items-center p-2">
+      <label htmlFor="fileInput" className="cursor-pointer flex items-center px-4 py-2 bg-gray-800 text-white rounded-md">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-6 w-6 mr-2 text-white"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M12 15l5-5m0 0l-5-5m5 5H7"
+          />
+        </svg>
+        Choose Image
+      </label>
+      <input
+        id="fileInput"
+        type="file"
+        className="hidden"
+        onChange={retriveHash}
+      />
+    </div>
+    {displayImg ? (
+      <img
+        src={displayImg}
+        alt="image"
+        className="w-48 h-auto max-h-48 object-contain mx-auto"
+      />
+    ) : (
+      <img
+        src="./hero-image.png"
+        alt="placeholder"
+        className="w-48 h-auto max-h-48 object-contain mx-auto"
+      />
+    )}
+    <button
+      onClick={uploadToPinata}
+      className="w-full bg-blue-500 text-white py-2 rounded-b-lg hover:bg-blue-600"
+    >
+      {fileName}
+    </button>
+  </div>
+</div>
+
+
+
+
+
+
+
+
   <CreateForm 
             labelName="Description *"
             placeholder="Write your review"

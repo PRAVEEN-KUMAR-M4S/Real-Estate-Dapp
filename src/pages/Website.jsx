@@ -76,7 +76,7 @@ const Website = () => {
       <Value/>
       <Top creators={creators} isLoading={isLoading}/>
       <Get/>
-      <Collections housing={housing} rental={rental} office={office} commercial={commercial} />
+      
     
     </div>
     

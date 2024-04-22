@@ -8,11 +8,11 @@ const PropertyCard = ({card,property}) => {
   return (
     <div onClick={()=>navigate(`../${property}/${card.productId}`)} className="blue-glassmorphism r-card">
  
-    <img src={card.images} alt="cardimage" />
+    <img src={`https://brown-neighbouring-nightingale-766.mypinata.cloud/ipfs/${card?.images}`} alt="cardimage" />
     
     <span className='flex justify-start mt-3 mb-3  r-price'>
         
-        <span style={{color:"#fff"}}>{card.price} </span>
+        <span style={{color:"#fff"}}>{card.price}&nbsp;</span>
         <span style={{color:"orange"}}>MATIC</span>
 
         

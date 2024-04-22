@@ -1,6 +1,7 @@
 import {  useContext,createContext,useState,useEffect} from "react";
-import { useAddress,useContract,useContractWrite,useMetamask,useContractRead,useContractEvents,useDisconnect,useSigner,useConnectionStatus } from "@thirdweb-dev/react";
+import { useAddress,useContract,useContractWrite,useMetamask,useContractRead,useContractEvents,useDisconnect,useSigner,useConnectionStatus, getContract } from "@thirdweb-dev/react";
 import { ethers } from "ethers";
+
 
 const StateContext=createContext();
 
@@ -14,8 +15,11 @@ const signer=useSigner()
 const [userBlance, setUserBlance] = useState()
 
 
-const { contract } = useContract("0x961FC7911f294794fa605bcbe8242c96aa0FF122");
+const { contract } = useContract("0xF21cEF9fE968ef502f026e877416b4b5B97ac27b");
 const { mutateAsync: listProperty} = useContractWrite(contract, "listProperty")
+
+
+console.log(contract);
 
 const createPropertyFunction = async (form) => {
     console.log(form)
@@ -25,9 +29,12 @@ const createPropertyFunction = async (form) => {
     price,
     images,
     propertyAddress}=form;
+
+
   try {
     const data = await listProperty({ args: [address, price, propertyTitle, category, images, propertyAddress, description] });
     console.info("contract call successs", data);
+   
   } catch (err) {
     console.error("contract call failure", err);
   }
@@ -101,6 +108,17 @@ const { mutateAsync: updateProperty, isLoading:updatePropertyLoading } = useCont
     console.log(form);
     try {
       const data = await updatePrice({ args: [address, productId, ethers.utils.parseEther(price)] });
+      console.info("contract call successs", data);
+    } catch (err) {
+      console.error("contract call failure", err);
+    }
+  }
+
+  const updateStatusFunction = async (Sellingstatus) => {
+    const{productId,status}=Sellingstatus;
+    console.log(Sellingstatus);
+    try {
+      const data = await contract.call("updateStatus", [address, productId, status])
       console.info("contract call successs", data);
     } catch (err) {
       console.error("contract call failure", err);
@@ -265,7 +283,7 @@ const { mutateAsync: updateProperty, isLoading:updatePropertyLoading } = useCont
 
 return(
     <StateContext.Provider value={{address,connect,contract,createPropertyFunction,getAllPropertyData,
-      updatePropertyFunction,updatePriceFunction,buyPropertyFunction,reviewFunction,likeReviewFunction,fetProductReviewFunction,getPropertyFunction,
+      updatePropertyFunction,updatePriceFunction,buyPropertyFunction,updateStatusFunction,reviewFunction,likeReviewFunction,fetProductReviewFunction,getPropertyFunction,
       getUserPropertiesFunction,getUserreviewFunction,totalPropertyFunction,totalReviewFunction,highestRatedFunction,
       disconnect,connectionStatus,userBlance}}>
 {children}
