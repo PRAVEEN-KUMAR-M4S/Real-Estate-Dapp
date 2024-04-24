@@ -1,9 +1,9 @@
-import React from 'react'
-import { useState,useEffect } from "react";
-import "./Profile.css"
-import { SwiperSlide,Swiper,useSwiper } from "swiper/react";
-import {SiEthereum} from 'react-icons/si';
-import {BsInfoCircle} from 'react-icons/bs';
+import React from 'react';
+import { useState, useEffect } from "react";
+import "./Profile.css";
+import { SwiperSlide, Swiper, useSwiper } from "swiper/react";
+import { SiEthereum } from 'react-icons/si';
+import { BsInfoCircle } from 'react-icons/bs';
 import { useStateContext } from "../../context/index";
 import { shortenAddress } from "../../../utility/utils";
 import { useBalance } from "@thirdweb-dev/react";
@@ -12,90 +12,90 @@ import PropertyCard from "../../components/Propertycard/PropertyCard";
 import Loader from "../../components/Loader/Loader";
 
 const Profile = () => {
-  const {address,getUserPropertiesFunction,contract}=useStateContext();
-const {data,} = useBalance();
-  
-const [isLoading, setIsLoading] = useState(false);
-const [properties, setProperties] = useState([]);
-const [author, setAuthor] = useState([]);
+  const { address, getUserPropertiesFunction, contract } = useStateContext();
+  const { data } = useBalance();
 
-const fetchProperty=async()=>{
-  setIsLoading(true);
-  const data = await getUserPropertiesFunction();
+  const [isLoading, setIsLoading] = useState(false);
+  const [properties, setProperties] = useState([]);
+  const [author, setAuthor] = useState([]);
 
-  setProperties(data);
-  setIsLoading(false);
-}
+  const fetchProperty = async () => {
+    setIsLoading(true);
+    const data = await getUserPropertiesFunction();
 
+    setProperties(data || []); // Initialize properties as an empty array if data is undefined
+    setIsLoading(false);
+  }
 
+  useEffect(() => {
+    if (contract) fetchProperty();
+  }, [address, contract]);
 
-useEffect(() => {
-  if(contract) fetchProperty();
-}, [address,contract]);
-
-
-if(isLoading){
-  return(<Loader/>);
-}
+  if (isLoading) {
+    return (<Loader />);
+  }
 
   return (
     <section className='p-wrapper '>
-      <div className="paddings innerWidth "> 
+      <div className="paddings innerWidth ">
         <div className="paddings  gap-3  p-container flex flex-col  items-center">
-       <img src="../../user.jpg" alt="user" className=' h-32 w-32 rounded-full ' />
-      
-       <div className='p-3 flex justify-end items-start md:ml-7 flex-col rounded-xl h-52 sm:w-96 w-full my-5 eth-card white-glassmorpism'>
-  <div className='flex flex-col justify-between h-full w-full'>
-    <div className='flex justify-between items-start'>
-      <div className='w-10 h-10 border-2 rounded-full flex justify-center items-center border-white'>
-        <SiEthereum color='#fff' fontSize={24}/>
+          <img src="../../user.jpg" alt="user" className=' h-32 w-32 rounded-full ' />
 
+          <div className='p-3 flex justify-end items-start md:ml-7 flex-col rounded-xl h-52 sm:w-96 w-full my-5 eth-card white-glassmorpism'>
+            <div className='flex flex-col justify-between h-full w-full'>
+              <div className='flex justify-between items-start'>
+                <div className='w-10 h-10 border-2 rounded-full flex justify-center items-center border-white'>
+                  <SiEthereum color='#fff' fontSize={24} />
+
+                </div>
+                <BsInfoCircle color='#fff' fontSize={20} />
+              </div>
+              <div className='flex justify-between'>
+                <div className=' text-black'>
+                  <p className=' font-semibold text-base'>{shortenAddress(address == null ? "xxxxx.....xxxx" : address)}</p>
+                  <p className='font-semibold text-lg'>Ethereum</p>
+                </div>
+                <p className=' font-semibold text-base'>{data?.displayValue.slice(0, 5)}</p>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+        <div className="flexColStart mb-5">
+          <span className='orangeText' >Owner</span>
+          <span className='primaryText'>Property Owned</span>
+
+        </div>
+
+        {properties.length === 0 ? (
+                    <div className="no-results flex flex-col items-center">
+                    <img src="./1713855105505.png" alt="No results found" className='h-72' />
+                    <p className="text-gray-500 mt-4 text-xl font-bold">No results found</p>
+                  </div>
+        ) : (
+          <Swiper {...silderSettings}>
+            <SwiperButton />
+            {properties.map((card, i) => (
+              <SwiperSlide key={i}>
+                <PropertyCard card={card} property="updateproperty" />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        )}
       </div>
-      <BsInfoCircle color='#fff' fontSize={20}/>
-    </div>
-    <div className='flex justify-between'>
-       <div className=' text-black'>
-      <p className=' font-semibold text-base'>{shortenAddress(address == null?"xxxxx.....xxxx":address)}</p>
-      <p className='font-semibold text-lg'>Ethereum</p>
-    </div>
-    <p className=' font-semibold text-base'>{data?.displayValue.slice(0,5)}</p>
-    </div>
-   
-  </div>
- </div>
-
-       </div>
-       <div className="flexColStart">
-            <span className='orangeText' >Owner</span>
-            <span className='primaryText'>Property Owned</span>
-
-        </div>
-        
-        <Swiper {...silderSettings}>
-            <SwiperButton/>
-        {
-            properties?.map((card,i)=>(
-                <SwiperSlide key={i}>
-                    <PropertyCard card={card} property="updateproperty"/>
-                </SwiperSlide>
-            ))
-        }</Swiper>
-        </div>
-      
-       
     </section>
   )
 }
 
-export default Profile
+export default Profile;
 
-
-const SwiperButton=()=>{
-  const swiper=useSwiper()
-  return(
-      <div className="flexCenter r-button">
-          <button onClick={()=>swiper.slidePrev()}>&lt;</button>
-          <button onClick={()=>swiper.slideNext()}>&gt;</button>
-      </div>
+const SwiperButton = () => {
+  const swiper = useSwiper();
+  return (
+    <div className="flexCenter r-button">
+      <button onClick={() => swiper.slidePrev()}>&lt;</button>
+      <button onClick={() => swiper.slideNext()}>&gt;</button>
+    </div>
   )
 }

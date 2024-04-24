@@ -184,7 +184,7 @@ const Details = () => {
 
             <div className="flexStart head">
               <span className='primaryText'>{property?.title}</span>
-              <span className='orangeText' style={{fontSize:'1.5rem'}}>{property?.price} MATIC</span>
+              <span className='orangeText' style={{fontSize:'1.5rem'}}>{property?.price} ETH</span>
             </div>
             <div className="flexStart owner gap-4">
               <FaRegUser size={25} color='#fff'/>
@@ -220,7 +220,7 @@ const Details = () => {
         </div>
       <div className='justify-between items-center'>
        <Comment parsedReviews={parsedReviews}/>
-        <textarea name="" id="" cols='55' rows="8" onChange={(e)=>handleFormFeildChange("comment",e)} className='comment border-[1px]'></textarea>
+        <textarea name="" id=""    rows="8" onChange={(e)=>handleFormFeildChange("comment",e)} className='comment border-[1px] w-full'></textarea>
         <button className='button' onClick={()=>createReview()}>{commentLoading? <HashLoader size={25} color='#fff'/>:"Add Comment"}</button>
        </div>
         {/* <Map homeaddress={homeaddress} city={city} country={country}/> */}

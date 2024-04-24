@@ -13,7 +13,7 @@ const PropertyCard = ({card,property}) => {
     <span className='flex justify-start mt-3 mb-3  r-price'>
         
         <span style={{color:"#fff"}}>{card.price}&nbsp;</span>
-        <span style={{color:"orange"}}>MATIC</span>
+        <span style={{color:"orange"}}>ETH</span>
 
         
         

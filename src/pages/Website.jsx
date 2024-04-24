@@ -14,6 +14,7 @@ import Get from '../components/get started/get';
 import  Footer  from '../components/Footer';
 import Top from "../components/Top creators/Top";
 import Collections from '../components/Collections/Collections';
+import Services from '../components/Services/Services';
 
 
 const Website = () => {
@@ -74,8 +75,10 @@ const Website = () => {
     </div>
     <div className='gradient-bg-services'>
       <Value/>
+      {/* <Services/> */}
       <Top creators={creators} isLoading={isLoading}/>
       <Get/>
+    
       
     
     </div>
